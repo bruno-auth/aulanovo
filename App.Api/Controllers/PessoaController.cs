@@ -34,7 +34,14 @@ namespace App.Api.Controllers
         [HttpGet("BuscaPorId")]
         public JsonResult BuscaPorId(Guid id)
         {
-            return Json(_service.BuscaPorId(id));
+            try
+            { 
+                return Json(RetornoApi.Sucesso(_service.BuscaPorId(id)));
+            }
+            catch (Exception ex)
+            {
+                return Json(RetornoApi.Erro(ex.Message));
+            };
         }
         [HttpPost("Salvar")]
         public JsonResult Salvar([FromBody] Pessoa obj)
@@ -56,6 +63,20 @@ namespace App.Api.Controllers
             try
             {
                 _service.Remover(id);
+                return Json(RetornoApi.Sucesso(true));
+            }
+            catch (Exception ex)
+            {
+                return Json(RetornoApi.Erro(ex.Message));
+            }
+        }
+
+        [HttpPost("Alterar")]
+        public JsonResult Alterar([FromBody] Pessoa obj)
+        {
+            try
+            {
+                _service.Alterar(obj);
                 return Json(RetornoApi.Sucesso(true));
             }
             catch (Exception ex)

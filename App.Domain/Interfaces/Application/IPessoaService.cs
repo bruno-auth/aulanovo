@@ -10,6 +10,6 @@ namespace App.Domain.Interfaces.Application
         List<Pessoa> listaPessoas(string nome, int pesoMaiorQue, int pesoMenorQue);
         void Salvar(Pessoa obj);
         void Remover(Guid id);
-
+        void Alterar(Pessoa obj);
     }
 }

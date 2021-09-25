@@ -1,4 +1,5 @@
-﻿using App.Domain.Entities;
+﻿using App.Common;
+using App.Domain.Entities;
 using App.Domain.Interfaces.Application;
 using App.Domain.Interfaces.Repositories;
 using System;
@@ -37,6 +38,8 @@ namespace App.Application.Services
                 Id = p.Id,
                 Nome = p.Nome,
                 Peso = p.Peso,
+                Telefone = p.Telefone,
+                Cpf = p.Cpf,
                 Cidade = new Cidade
                 {
                     Nome = p.Cidade.Nome
@@ -52,12 +55,36 @@ namespace App.Application.Services
         }
         public void Salvar(Pessoa obj)
         {
+            if (obj.Id == Guid.Empty)
+            {
             if (String.IsNullOrEmpty(obj.Nome))
             {
                 throw new Exception("Informe o nome");
             }
+                bool existe = _repository.Query(x => x.Cpf == obj.Cpf).Any();
+                if (existe)
+                {
+                    throw new Exception("CPF existente na base de dados");
+                }
+                if (!obj.Cpf.CpfCnpjValido())
+                {
+                    throw new Exception(" Insira um CPF válido!");
+                }
+            }
             _repository.Save(obj);
             _repository.SaveChanges();
         }
+
+        public void Alterar(Pessoa obj)
+        {
+            if (String.IsNullOrEmpty(obj.Nome))
+            {
+                throw new Exception("Informe o nome");
+            }
+            _repository.Update(obj);
+            _repository.SaveChanges();
+        }
+
+        
     }
 }
